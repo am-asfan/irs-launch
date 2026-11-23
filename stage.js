@@ -172,14 +172,16 @@ startNow.addEventListener('click', openCurtain);
 stage.addEventListener('click', openCurtain);
 
 window.addEventListener('keydown', event => {
-  if (stage.dataset.scene !== 'closed' || event.repeat) return;
+  if (event.repeat) return;
   if (event.key !== 'Enter' && event.key !== 'Backspace') return;
 
-  // Let the focused logo button use its native Enter-key behavior.
-  if (event.key === 'Enter' && event.target === start) return;
+  const scene = stage.dataset.scene;
+  const target = scene === 'closed' ? start : scene === 'ready' && !launch.hidden ? launch : null;
+  if (!target) return;
 
+  // Prevent native button activation too, so the action fires exactly once.
   event.preventDefault();
-  start.click();
+  target.click();
 });
 
 launch.addEventListener('click', () => {
